@@ -12,4 +12,16 @@ app.get('/', (req, res) => {
     res.status(200).json({msg: "Bem vindo a nossa API"})
 })
 
-app.listen(3000)
+//Credenciais
+const dbUser = process.env.DB_USER
+const dbPassword = process.env.DB_PASS
+
+//sniped
+mongoose
+    .connect(`mongodb+srv://${dbUser}:${dbPassword}@cluster0.qnilb9g.mongodb.net/?retryWrites=true&w=majority`)
+    .then(() => {
+        app.listen(3000)
+        console.log('Conectou ao Banco!')
+})
+    .catch((err) => console.log(err))
+
