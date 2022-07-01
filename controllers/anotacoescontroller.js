@@ -1,5 +1,6 @@
 const express = require("express");
 const authMiddleware = require("../middlewares/auth");
+const Anotacoes = require("../models/anotacoes");
 
 const Resultados = require("../models/anotacoes");
 
@@ -15,6 +16,27 @@ router.get("/", async (req, res) => {
   } catch (err) {
     return res.status(400).send({ error: "Erro ao carregar anotacoes" });
   }
+});
+
+router.post("/", async (req, res) => { 
+
+  try {
+
+      const anotacoes= await Anotacoes.create({
+          usuario: req.userId,
+          titulo: req.titulo,
+          descricao: req.descricao,
+          data: req.data
+
+      });
+
+      await Anotacoes.save();
+
+      return res.send({ Anotacoes });
+  } catch (err) {
+      return res.status(400).send({ error: "Erro ao gerar questoes" });
+  }
+
 });
 
 router.delete("/:anotacaoid", async (req, res) => {

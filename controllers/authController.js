@@ -1,5 +1,5 @@
 const express = require("express");
-const User = require("../models/user");
+const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const authConfig = require("../config/auth.json");
@@ -32,7 +32,7 @@ router.post("/login", async (req, res) => {
     return res.status(400).send({ error: "Email não encontrado" });
   }
   if (!(await bcrypt.compare(senha, user.senha))) {
-    return res.status(400).send({ error: "Senha incorreta" });
+    return res.status(400).send({ error: "senha incorreta" });
   }
 
   user.senha = undefined;
