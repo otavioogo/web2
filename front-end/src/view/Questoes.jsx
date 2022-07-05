@@ -15,7 +15,7 @@ function Questoes() {
   const handleShow = () => setShow(true);
   const usuarioToken = useSelector((state) => state.usuarioToken);
   const [questoes, setQuestoes] = useState([]);
-  const listaQuestoes = [];
+ 
 
   useEffect(() => {
     const headers = {
@@ -34,7 +34,7 @@ function Questoes() {
       .catch((err) => {
         toast.error(err.response.data.error);
       });
-  }, [show]);
+  });
 
   return (
     <>
@@ -43,7 +43,7 @@ function Questoes() {
       </div>
       <NavBar
         paginaSelecionada="questoes"
-        btnTexto="Questao"
+        btnTexto="Excluir Conta"
         criar={handleShow}
       />
       <div className="questoes-content">
