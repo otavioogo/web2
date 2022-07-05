@@ -20,10 +20,6 @@ function Questao(props) {
   var data = new Date(props.item.dataHoraEntrega);
   id = props.item._id;
 
-  function adicionaZero(numero) {
-    if (numero <= 9) return "0" + numero;
-    else return numero;
-  }
 
   var rand = Math.floor(Math.random() * 360);
   function excluir(id) {
@@ -46,12 +42,7 @@ function Questao(props) {
         });
     }
   }
-  useEffect(() => {
-    props.item &&
-      setHoraFormatada(
-        adicionaZero(data.getHours()) + ":" + adicionaZero(data.getMinutes())
-      );
-  }, []);
+ 
 
   return (
     <>

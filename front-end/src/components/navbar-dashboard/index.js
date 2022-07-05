@@ -44,7 +44,7 @@ function NavbarDashboard(props) {
                     : null
                 }
               >
-                Questoes
+                Editar
               </Link>
             </li>
           </ul>
@@ -58,7 +58,7 @@ function NavbarDashboard(props) {
             >
               {props.paginaSelecionada === "livros"
                 ? `Adicionar ${props.btnTexto}`
-                : `Ver ${props.btnTexto}`}
+                : ` ${props.btnTexto}`}
             </button>
           ) : null}
           {props.sair ? (

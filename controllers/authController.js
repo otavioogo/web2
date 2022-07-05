@@ -44,4 +44,12 @@ router.post("/login", async (req, res) => {
   res.send({ user, token });
 });
 
+router.post("/questoes", async (req, res) => {
+  if(!User.isAdmin(req.user)) {
+    return res.status(401).json({auth: false, message: "Verificacao conta ativa"})
+}
+  return next()
+})
+
+
 module.exports = (app) => app.use("/auth", router);

@@ -1,8 +1,8 @@
 import axios from "axios";
 import ptBR from "date-fns/locale/pt-BR";
-import React, { useEffect, useState } from "react";
-import { Button, Modal } from "react-bootstrap";
-import DatePicker from "react-datepicker";
+import React, { useState } from "react";
+import { Alert, Button, Modal } from "react-bootstrap";
+
 import "react-datepicker/dist/react-datepicker.css";
 import toast, { Toaster } from "react-hot-toast";
 import { useSelector } from "react-redux";
@@ -14,11 +14,7 @@ function ModalQuestao(props) {
   const [show, setShow] = useState(true);
 
   const [titulo, setTitulo] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [materia, setMateria] = useState("Selecione uma disciplina");
-  const [startDate, setStartDate] = useState(new Date());
-  const [horario, setHorario] = useState();
-  const [horaFormatada, setHoraFormatada] = useState("00:00");
+
 
   // const materias = [
   //   "Desenvolvimento Web 1",
@@ -34,27 +30,21 @@ function ModalQuestao(props) {
     Authorization: `Bearer ${usuarioToken}`,
   };
 
-  function gerarQuestao() {
+  function excluir() {
 
     axios
       .post(baseURL, {
         headers: headers,
       })
       .then((res) => {
-        toast.success("Questoes geradas com sucesso");
+        toast.success("Conta Excluida com Sucesso !");
+        
         props.close();
       })
       .catch((err) => {
         toast.error(err.response.data.error);
       });
   }
-
-  useEffect(() => {
-    if (props.item) {
-      var data = new Date(props.item.dataHoraEntrega);
-    }
-    props.item ? setTitulo(props.item.titulo) : setTitulo("");
-  }, []);
 
   return (
     <div className="modal">
@@ -64,18 +54,18 @@ function ModalQuestao(props) {
       <Modal show={show} onHide={props.close}>
         <Modal.Header closeButton>
           {props.item ? (
-            <Modal.Title>Gerar Questao</Modal.Title>
+            <Modal.Title>DESATIVAR CONTA</Modal.Title>
           ) : (
-            <Modal.Title>Gerar Questões</Modal.Title>
+            <Modal.Title>DESATIVAR CONTA</Modal.Title>
           )}
         </Modal.Header>
         <Modal.Body>
           <div className="my-2">
-            Nivel de Dificuldade
+            Motivo pelo qual deseja Desativar a sua conta.
             <input
               type="text"
               className="form-control"
-              id="tituloQuestao"
+              id="titulo"
               onChange={(e) => setTitulo(e.target.value)}
               value={props.item && titulo}
             />
@@ -92,10 +82,10 @@ function ModalQuestao(props) {
               ? () => {
                  
                 }
-              : gerarQuestao
+              : excluir
             }
           >
-            Gerar Questões
+            Desativar Conta
           </Button>
         </Modal.Footer>
       </Modal>

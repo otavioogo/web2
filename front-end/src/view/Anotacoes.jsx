@@ -1,117 +1,59 @@
 import axios from "axios";
-import React, { useState } from "react";
-import { Spinner } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect, useHistory } from "react-router-dom";
-import "../styles/login.css";
+import { useSelector } from "react-redux";
+import CadastrarQuestoes from "../components/cadastrarQuestoes";
+import NavBar from "../components/navbar-dashboard";
+import Questao from "../components/questoes";
+import "../styles/questoes.css";
 
-function Login() {
-  const [email, setEmail] = useState();
-  const [senha, setSenha] = useState();
-  const [carregando, setCarregando] = useState(0);
-  const baseURL = "http://localhost:8010/auth/login";
+const baseURL = "http://localhost:8010/api/questoes";
 
-  const dispatch = useDispatch();
-  const history = useHistory();
+function Questoes() {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const usuarioToken = useSelector((state) => state.usuarioToken);
+  const [questoes, setQuestoes] = useState([]);
+  const listaQuestoes = [];
 
-  function auth() {
-    setCarregando(1);
-
+  useEffect(() => {
     const headers = {
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS, PUT, PATCH, DELETE",
-      "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json; charset=UTF-8",
-    };
-
-    const dadosLogin = {
-      email: email,
-      senha: senha,
+      Authorization: `Bearer ${usuarioToken}`,
     };
 
     axios
-      .post(baseURL, dadosLogin, {
+      .get(baseURL, {
         headers: headers,
       })
       .then((res) => {
-        setCarregando(0);
-        toast.success("Seja bem vindo!");
-        dispatch({
-          type: "LOGIN",
-          usuarioId: res.data.user._id,
-          usuarioNome: res.data.user.nome,
-          usuarioToken: res.data.token,
-        });
-        history.push("/home");
+        console.log(res.data.questoes);
+        setQuestoes(res.data.questoes);
       })
       .catch((err) => {
         toast.error(err.response.data.error);
-        setCarregando(0);
       });
-  }
+  }, [show]);
 
   return (
     <>
-      {useSelector((state) => state.usuarioLogado) > 0 ? (
-        <Redirect to="/anotacoes" />
-      ) : null}
       <div>
         <Toaster />
       </div>
-      <div className="container__principal">
-        <div className="div__login">
-          <div className="div__titulo">
-            <h2>Entrar</h2>
-          </div>
-          <div className="div__inputs">
-            <h5>Email</h5>
-            <input
-              type="text"
-              className="form-control input"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <h5>Senha</h5>
-            <input
-              type="password"
-              className="form-control input"
-              id="senha"
-              value={senha}
-              onChange={(e) => setSenha(e.target.value)}
-            />
-          </div>
-          <div className="esqueceu__senha">
-            <p className="esqueceu__senha">Esqueceu sua senha?</p>
-          </div>
-          {carregando ? (
-            <Spinner variant="primary" animation="border" role="status">
-              <span className="visually-hidden">Carregando...</span>
-            </Spinner>
-          ) : (
-            // eslint-disable-next-line jsx-a11y/anchor-is-valid
-            <a>
-              <button className="main__acessar" onClick={auth}>
-                Acessar
-              </button>
-            </a>
-          )}
-
-          <div className="div__social">
-          </div>
-          <span className="criar__conta">
-            Não possui uma conta?{" "}
-            <span className="criar__conta" style={{ color: "#2C7AED" }}>
-              <b>
-                <a href="/cadastrar">Crie uma conta agora</a>
-              </b>
-            </span>
-          </span>
-        </div>
+      <NavBar
+        paginaSelecionada="questoes"
+        btnTexto="Questao"
+        criar={handleShow}
+      />
+      <div className="questoes-content">
+        {questoes.map((item) => (
+          <Questao item={item} />
+        ))}
       </div>
+      {show && <CadastrarQuestoes open={handleShow} close={handleClose} />}
     </>
   );
 }
 
-export default Login;
+export default Questoes;
